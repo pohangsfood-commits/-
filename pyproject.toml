@@ -1,0 +1,12 @@
+[project]
+name = "capcut-auto"
+version = "0.1.0"
+description = "버벅임/무음 구간 자동 컷 + 자막 생성 → CapCut draft 자동화 도구"
+requires-python = ">=3.9"
+dependencies = [
+    "faster-whisper>=1.0.0",
+    "pycapcut>=0.1.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
