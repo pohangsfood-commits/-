@@ -1,0 +1,32 @@
+name: Build Windows Installer
+
+on:
+  push:
+    branches:
+      - claude/capcut-automation-tool-srv3wc
+    paths:
+      - "capcut_auto/**"
+      - "installer/**"
+      - "requirements.txt"
+      - ".github/workflows/build-windows-installer.yml"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile installer with Inno Setup
+        uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+        with:
+          path: installer/capcut_auto_setup.iss
+          options: /O+
+
+      - name: Upload installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CapCutAuto-Setup
+          path: installer/Output/*.exe
+          if-no-files-found: error

@@ -33,6 +33,29 @@ CapCut 프로젝트(draft)를 만들어주는 파이썬 도구입니다.
 나뉘어 있어서 CapCut에 반영하기 전에 무엇을 잘랐는지 검토하고 필요하면 수정할 수 있습니다.
 바로 한 번에 처리하고 싶다면 `run` 명령을 쓰면 됩니다.
 
+## Windows 설치 프로그램 (.exe)
+
+Python을 직접 설치하고 싶지 않다면, Windows용 설치 프로그램을 받아 실행하세요.
+
+1. 이 저장소의 **Actions** 탭 → `Build Windows Installer` 워크플로 → 가장 최근 성공한 실행
+   → **Artifacts**에서 `CapCutAuto-Setup`을 내려받아 압축을 풀면 `CapCutAuto_Setup.exe`가
+   나옵니다.
+2. `CapCutAuto_Setup.exe`를 실행합니다. 관리자 권한이 필요 없습니다.
+3. 설치 중 자동으로 Python/ffmpeg가 없으면 `winget`으로 설치하고, 필요한 파이썬 패키지를
+   설치합니다 — 인터넷 연결이 필요하고 수 분 정도 걸릴 수 있습니다 (진행 상황이 콘솔 창에
+   표시됩니다).
+4. 설치가 끝나면 바탕화면/시작 메뉴의 **CapCut 자동 컷편집** 아이콘으로 실행하면 브라우저가
+   열립니다.
+
+> 이 설치 프로그램은 앱 코드와 필요한 패키지를 설치하는 **가벼운 설치기**입니다. Whisper
+> 음성인식 모델(수 GB)은 앱을 처음 실행할 때 별도로 내려받습니다. `winget`이 없는 구형
+> Windows에서는 Python/ffmpeg를 [직접 설치](https://www.python.org/downloads/)한 뒤 설치
+> 프로그램을 다시 실행해주세요. (설치기 소스: `installer/`, 빌드 워크플로:
+> `.github/workflows/build-windows-installer.yml` — GitHub Actions의 Windows 러너에서
+> Inno Setup으로 빌드됩니다.)
+
+macOS는 아직 별도 설치 프로그램이 없어 아래 CLI 설치 방법을 그대로 따라주세요.
+
 ## 설치
 
 - Python 3.9 이상
