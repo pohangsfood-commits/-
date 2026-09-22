@@ -29,3 +29,24 @@ class Config:
     whisper_model: str = "large-v3"
     whisper_device: str = "auto"
     whisper_language: str = "ko"
+
+    def to_dict(self) -> dict:
+        d = dict(self.__dict__)
+        d["filler_words"] = list(d["filler_words"])
+        return d
+
+    @staticmethod
+    def from_dict(d: dict) -> "Config":
+        defaults = Config()
+        kwargs = {}
+        for field_name in defaults.__dict__:
+            if field_name not in d:
+                continue
+            value = d[field_name]
+            if field_name == "filler_words":
+                if isinstance(value, str):
+                    value = tuple(w.strip() for w in value.split(",") if w.strip())
+                else:
+                    value = tuple(value)
+            kwargs[field_name] = value
+        return Config(**kwargs)

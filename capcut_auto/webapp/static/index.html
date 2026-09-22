@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CapCut 자동 컷편집</title>
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<header>
+  <h1>CapCut 자동 컷편집 + 자막</h1>
+  <p class="sub">무음/버벅임 구간을 자동으로 찾아 컷 리스트를 만들고, 검토 후 CapCut 프로젝트로 내보냅니다.
+  이 서버와 CapCut은 반드시 같은 PC/Mac에서 실행되어야 합니다.</p>
+</header>
+
+<main>
+  <section id="step-upload" class="card">
+    <h2>1. 영상 업로드</h2>
+    <div id="drop-zone" class="drop-zone">
+      <p>여기로 영상을 끌어다 놓거나 클릭해서 선택하세요</p>
+      <input id="file-input" type="file" accept="video/*" hidden />
+    </div>
+    <p id="upload-info" class="muted"></p>
+  </section>
+
+  <section id="step-config" class="card hidden">
+    <h2>2. 탐지 옵션</h2>
+    <details>
+      <summary>고급 옵션 펼치기 (기본값으로도 충분히 동작합니다)</summary>
+      <div class="grid" id="config-grid"></div>
+    </details>
+    <button id="btn-analyze" class="primary">분석 시작</button>
+  </section>
+
+  <section id="step-progress" class="card hidden">
+    <h2>진행 상황</h2>
+    <div id="progress-line" class="progress-line"></div>
+    <pre id="log-box" class="log-box"></pre>
+  </section>
+
+  <section id="step-review" class="card hidden">
+    <h2>3. 컷 리스트 검토</h2>
+    <div id="stats" class="stats"></div>
+    <p class="muted">체크를 해제하면 해당 구간을 자르지 않고 남깁니다. 수정 후 "다시 계산"을 눌러 반영하세요.</p>
+    <table id="cut-table">
+      <thead>
+        <tr><th></th><th>#</th><th>시작</th><th>끝</th><th>길이</th><th>이유</th><th>신뢰도</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button id="btn-recalc" class="secondary">다시 계산</button>
+
+    <h3>자막 미리보기 (원본 타임라인 기준)</h3>
+    <textarea id="preview-srt" readonly></textarea>
+  </section>
+
+  <section id="step-build" class="card hidden">
+    <h2>4. CapCut Draft 생성</h2>
+    <label>프로젝트 이름
+      <input id="draft-name" type="text" placeholder="예: 내영상_자동컷" />
+    </label>
+    <label>CapCut draft 폴더
+      <input id="drafts-dir" type="text" placeholder="자동 감지 실패 시 직접 입력" />
+    </label>
+    <label class="checkbox-line">
+      <input id="allow-replace" type="checkbox" />
+      같은 이름의 프로젝트가 있으면 덮어쓰기
+    </label>
+    <button id="btn-build" class="primary">CapCut Draft 만들기</button>
+    <div id="build-result"></div>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

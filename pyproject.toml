@@ -6,6 +6,7 @@ requires-python = ">=3.9"
 dependencies = [
     "faster-whisper>=1.0.0",
     "pycapcut>=0.1.0",
+    "flask>=3.0.0",
 ]
 
 [tool.pytest.ini_options]

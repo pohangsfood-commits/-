@@ -47,7 +47,35 @@ pip install -r requirements.txt
 GPU가 있으면 `faster-whisper`가 자동으로 활용하며(CUDA), 없으면 CPU로도 동작합니다(느릴 수
 있음). 처음 실행 시 Whisper 모델 가중치를 자동으로 내려받습니다.
 
-## 사용법
+## 웹 UI로 사용하기 (권장)
+
+브라우저에서 영상을 업로드하고, 컷 리스트를 체크박스로 검토/수정한 뒤 CapCut draft를
+만들 수 있는 로컬 웹 UI가 포함되어 있습니다.
+
+```bash
+python -m capcut_auto.webapp
+```
+
+브라우저가 자동으로 열리며 `http://127.0.0.1:8765` 로 접속됩니다(안 열리면 직접 접속).
+서버는 이 명령을 실행한 컴퓨터에서만 접속 가능하며(외부 공개 아님), **CapCut이 설치된
+바로 그 PC/Mac에서 실행해야** 업로드한 영상과 생성된 draft를 CapCut이 정상적으로 찾을 수
+있습니다. 종료하려면 터미널에서 `Ctrl+C`를 누르세요.
+
+사용 흐름:
+
+1. 영상을 드래그 앤 드롭(또는 클릭해서 선택)해서 업로드
+2. 필요하면 "고급 옵션"에서 임계값을 조정하고 **분석 시작**
+3. 분석이 끝나면 컷 리스트 표에서 원치 않는 구간의 체크를 해제해 제외 (체크 해제 = 자르지
+   않고 남김), **다시 계산**으로 결과 미리보기 갱신
+4. 프로젝트 이름을 입력하고 **CapCut Draft 만들기** 클릭 → 완료되면 CapCut에서 해당
+   프로젝트를 열면 됩니다
+
+업로드한 영상 원본은 `~/.capcut_auto/webapp/jobs/<작업ID>/source.*` 에 보관되며, 생성된
+draft가 이 파일을 참조하므로 **CapCut에서 편집을 마칠 때까지 이 폴더를 지우지 마세요.**
+
+같은 파이프라인을 커맨드라인에서 스크립팅하고 싶다면 아래 CLI를 사용하세요.
+
+## CLI 사용법
 
 ### 1) 분석만 하기 (권장 — 먼저 결과를 확인)
 
@@ -104,15 +132,15 @@ python -m capcut_auto run "내영상.mp4" --draft-name "내영상_자동컷"
 ## 동작 확인 방법 (로컬에서 꼭 해보세요)
 
 이 코드는 CapCut/ffmpeg/GPU가 없는 클라우드 환경에서 작성되어, `cutlist.py` 등 순수
-파이썬 로직은 `tests/`의 단위 테스트로 검증했지만 **ffmpeg 무음 탐지, Whisper 인식,
-실제 CapCut draft가 CapCut 앱에서 정상적으로 열리는지는 로컬 환경에서 직접 확인이
-필요합니다.**
+파이썬 로직은 `tests/`의 단위 테스트로 검증했고 웹 UI/CLI의 요청 흐름(업로드→분석→컷
+리스트 수정→draft 생성)도 ffmpeg/Whisper/pycapcut을 스텁으로 대체해 엔드투엔드로
+검증했지만, **실제 ffmpeg 무음 탐지, Whisper 인식 품질, 그리고 생성된 CapCut draft가
+CapCut 앱에서 정상적으로 열리는지는 로컬 환경에서 직접 확인이 필요합니다.**
 
-1. `pip install -r requirements.txt` 후 `python -m capcut_auto analyze 샘플영상.mp4 -o work`
-   실행 → `work/report.md`, `work/preview.srt`를 열어 무음/버벅임 탐지와 자막 인식이
-   그럴듯한지 확인
-2. `python -m capcut_auto build work --video 샘플영상.mp4 --draft-name test1` 실행 →
-   CapCut 실행 → `test1` 프로젝트가 열리는지, 컷과 자막이 맞게 배치됐는지 확인
+1. `pip install -r requirements.txt` 후 `python -m capcut_auto.webapp` 실행 → 브라우저에서
+   샘플 영상을 업로드해 분석 결과(컷 리스트, 자막 미리보기)가 그럴듯한지 확인
+2. **CapCut Draft 만들기**로 draft 생성 → CapCut 실행 → 프로젝트가 열리는지, 컷과 자막이
+   맞게 배치됐는지 확인
 3. 문제가 있으면 이슈로 남겨주시면 로직을 조정하겠습니다 (특히 `--silence-noise-db`,
    `--repeat-gap`, `--hesitation-gap`은 영상/목소리 특성에 따라 튜닝이 필요할 수 있습니다).
 
